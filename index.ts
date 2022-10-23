@@ -1,23 +1,62 @@
-// 타입스크립트 필수문법 정리 및 연습2
+// union type, any, unknown 연습
 
-// 1. 이름, 나이, 출생지역 담아보기
-let userName :string = "chilsung";
-let age :number = 23;
-let placeOfBirth :string = "seoul";
+//union type
+let 회원들 :(number|string)[] = [1, '2', 3]    //1. array안에 number또는 string이 들어올 수 있음
+let 회원들2 :number | string[] = ['2']         //2. number 또는 array안에 string만 들어올 수 있음
 
-// 2. 좋아하는 노래와 가수를 object자료로 담기
-let singer:{song : string, singer : string} = {
-    song : 'where were you in the morning',
-    singer : 'shawn Mendes'
+let obj :{a:string|number} = { a : 1}         //obj의 경우
+
+//any
+let 이름 :any;  //type 실드 해제 문법, 모든 자료형을 허용해줌
+이름 = 123;
+이름 = [];
+
+//unknown
+let 이름2 :unknown;  //any와 유사, 이게 조금 더 안전
+이름2 = 123;
+이름2 = [];
+
+// any VS unknown
+let 변수1 :string = 이름;    //any : 에러 안남
+let 변수2 :string = 이름2;   //unknown : 에러 
+
+이름 -1     //any : 에런 안남
+이름2 -1    //unknown : 에러
+
+
+// 엄격한 타입스크립트
+let unknown나이 :unknown =1;
+let union나이 :string|number;
+let string나이 :string;
+let number나이 :number;
+
+unknown나이+1;   // unknown타입 : 에러
+union나이+1;    //union타입 : 에러
+string나이+1;   // stirng타입 : 에러 안남
+number나이+1;   // number타입 : 에러 안남
+
+
+
+
+// 숙제 1
+let user:string = 'kim';
+let age:undefined|number = undefined;
+let married:boolean = false;
+let friend:(string|number|undefined|boolean)[] = [user, age, married];
+
+// 숙제 2
+let 학교:{
+    score:(number|boolean)[], 
+    teacher:string, 
+    friend:string|string[]
+}={
+    score : [100,90,80],
+    teacher : 'Phil',
+    friend : 'John'
 }
+학교.score[4] = false;
+학교.friend = ['Lee', 학교.teacher]
 
-// 3. 자료에 타입지정해보기
-let project:{
-    member : string[], 
-    days : number, 
-    started : boolean
-} = {
-    member : ['kim', 'park'],
-    days : 30,
-    started : true,
-}
+// 숙제 1
+
+
