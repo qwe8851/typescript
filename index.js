@@ -1,44 +1,55 @@
-// 함수에 타입지정 & void 타입
-// 함수 타입지정
+// 타입확정하기 Narrowing & Assertion
+// Narrowing - 타입이 아직 하나로 확정되지 않았을경우
+// typeof 변수
+// 속성명 in 오브젝트자료
+// 인스턴스 instanceof 부모
 function 함수(x) {
-    return x * 2;
-}
-함수(2);
-// 함수 타입지정 - void
-function 함수2(x) {
-    // return x*2
-}
-함수2(); //에러 - 파라미터를 안넣어주었기 때문
-// 함수 타입지정 - 파라미터 옵션 설정
-function 함수3(x) {
-}
-함수3();
-// 퀴즈1
-function 함수4(x) {
-    if (x === 'number')
-        console.log(x + 1);
-}
-함수4(2);
-// 숙제 1
-function exam1(x) {
-    if (x)
-        console.log("\uD558\uC774 +".concat(x));
+    if (typeof x === 'string')
+        return x + 'string type';
+    if (typeof x === 'number')
+        return x + 'number type';
     else
-        console.log("\uC785\uB825\uC548\uD568");
+        return 0; // else를 안넣으면 에러를 내주는데 이게 싫으면 tsconfig.json에 "noImplicitReturns" : false를 추가하면 됨
 }
-//숙제 2
-function exam2(x) {
-    return x.toString().length; //숫자는 length를 붙일 수 있음
+function 함수2(x) {
+    var arr = [];
+    if (typeof x === 'number')
+        arr[0] = x;
 }
-// 숙제 3
-function exam3(money, house, charm) {
-    var score = 0;
-    score += money;
-    if (house == true)
-        score += 500;
-    if (charm == '상')
-        score += 100;
-    if (score >= 600)
-        return ("결혼가능");
+// Assertion
+// 1. narrowing할 대 사용 (union타입 중 하나로 확정할 때 )
+// 2. 무슨 타입이 들어올지 100%확실할 때
+// 걍 안쓰는게 좋음
+function 함수3(x) {
+    var arr = [];
+    arr[0] = x; // 타입덮어쓰기
 }
-console.log(exam3(1000, true, '상'));
+function 변환기(data) {
+    return JSON.parse(data);
+}
+var jake = 변환기('{"name" : "kim"}');
+// 숙제 1 - 클리닝 함수
+function 클리닝함수(a) {
+    var 클리닝완료 = [];
+    a.forEach(function (b) {
+        if (typeof b === 'string')
+            클리닝완료.push(parseFloat(b));
+        else
+            클리닝완료.push(b);
+    });
+    return 클리닝완료;
+}
+// console.log(클리닝함수([123,'3']))
+// 숙제 2 - 함수만들기
+var 철수쌤 = { subject: 'math' };
+var 영희쌤 = { subject: ['science', 'english'] };
+var 민수쌤 = { subject: ['science', 'art', 'korean'] };
+function arr검사(a) {
+    if (Array.isArray(a.subject))
+        return a.subject[a.subject.length - 1];
+    else if (typeof a.subject == 'string')
+        return a.subject;
+    else
+        return '없쪄';
+}
+console.log(arr검사(민수쌤));
