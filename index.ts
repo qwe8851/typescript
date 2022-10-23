@@ -1,21 +1,23 @@
-// 타입스크립트 필수문법 정리 및 연습
+// 타입스크립트 필수문법 정리 및 연습2
 
-class User {
-    name :string;
-    constructor(name : string){
-        this.name = name;
-    }
+// 1. 이름, 나이, 출생지역 담아보기
+let userName :string = "chilsung";
+let age :number = 23;
+let placeOfBirth :string = "seoul";
+
+// 2. 좋아하는 노래와 가수를 object자료로 담기
+let singer:{song : string, singer : string} = {
+    song : 'where were you in the morning',
+    singer : 'shawn Mendes'
 }
 
-function 함수 (x : number) : number{
-    return x *2
+// 3. 자료에 타입지정해보기
+let project:{
+    member : string[], 
+    days : number, 
+    started : boolean
+} = {
+    member : ['kim', 'park'],
+    days : 30,
+    started : true,
 }
-
-type 타입  = string | number
-type Member = [number, boolean];
-type Member2 = {name : string}
-type Member3 = {[key: string] : string}
-
-let john:Member = [123, true];
-let park : Member2 = {name : 'kim'}
-let a : 타입 = 123;
