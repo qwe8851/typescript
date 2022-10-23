@@ -1,41 +1,44 @@
-// union type, any, unknown 연습
-//union type
-var 회원들 = [1, '2', 3]; //1. array안에 number또는 string이 들어올 수 있음
-var 회원들2 = ['2']; //2. number 또는 array안에 string만 들어올 수 있음
-var obj = { a: 1 }; //obj의 경우
-//any
-var 이름; //type 실드 해제 문법, 모든 자료형을 허용해줌
-이름 = 123;
-이름 = [];
-//unknown
-var 이름2; //any와 유사, 이게 조금 더 안전
-이름2 = 123;
-이름2 = [];
-// any VS unknown
-var 변수1 = 이름; //any : 에러 안남
-var 변수2 = 이름2; //unknown : 에러 
-이름 - 1; //any : 에런 안남
-이름2 - 1; //unknown : 에러
-// 엄격한 타입스크립트
-var unknown나이 = 1;
-var union나이;
-var string나이;
-var number나이;
-unknown나이 + 1; // unknown타입 : 에러
-union나이 + 1; //union타입 : 에러
-string나이 + 1; // stirng타입 : 에러 안남
-number나이 + 1; // number타입 : 에러 안남
+// 함수에 타입지정 & void 타입
+// 함수 타입지정
+function 함수(x) {
+    return x * 2;
+}
+함수(2);
+// 함수 타입지정 - void
+function 함수2(x) {
+    // return x*2
+}
+함수2(); //에러 - 파라미터를 안넣어주었기 때문
+// 함수 타입지정 - 파라미터 옵션 설정
+function 함수3(x) {
+}
+함수3();
+// 퀴즈1
+function 함수4(x) {
+    if (x === 'number')
+        console.log(x + 1);
+}
+함수4(2);
 // 숙제 1
-var user = 'kim';
-var age = undefined;
-var married = false;
-var friend = [user, age, married];
-// 숙제 2
-var 학교 = {
-    score: [100, 90, 80],
-    teacher: 'Phil',
-    friend: 'John'
-};
-학교.score[4] = false;
-학교.friend = ['Lee', 학교.teacher];
-// 숙제 1
+function exam1(x) {
+    if (x)
+        console.log("\uD558\uC774 +".concat(x));
+    else
+        console.log("\uC785\uB825\uC548\uD568");
+}
+//숙제 2
+function exam2(x) {
+    return x.toString().length; //숫자는 length를 붙일 수 있음
+}
+// 숙제 3
+function exam3(money, house, charm) {
+    var score = 0;
+    score += money;
+    if (house == true)
+        score += 500;
+    if (charm == '상')
+        score += 100;
+    if (score >= 600)
+        return ("결혼가능");
+}
+console.log(exam3(1000, true, '상'));

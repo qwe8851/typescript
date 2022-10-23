@@ -1,62 +1,54 @@
-// union type, any, unknown 연습
+// 함수에 타입지정 & void 타입
 
-//union type
-let 회원들 :(number|string)[] = [1, '2', 3]    //1. array안에 number또는 string이 들어올 수 있음
-let 회원들2 :number | string[] = ['2']         //2. number 또는 array안에 string만 들어올 수 있음
-
-let obj :{a:string|number} = { a : 1}         //obj의 경우
-
-//any
-let 이름 :any;  //type 실드 해제 문법, 모든 자료형을 허용해줌
-이름 = 123;
-이름 = [];
-
-//unknown
-let 이름2 :unknown;  //any와 유사, 이게 조금 더 안전
-이름2 = 123;
-이름2 = [];
-
-// any VS unknown
-let 변수1 :string = 이름;    //any : 에러 안남
-let 변수2 :string = 이름2;   //unknown : 에러 
-
-이름 -1     //any : 에런 안남
-이름2 -1    //unknown : 에러
-
-
-// 엄격한 타입스크립트
-let unknown나이 :unknown =1;
-let union나이 :string|number;
-let string나이 :string;
-let number나이 :number;
-
-unknown나이+1;   // unknown타입 : 에러
-union나이+1;    //union타입 : 에러
-string나이+1;   // stirng타입 : 에러 안남
-number나이+1;   // number타입 : 에러 안남
-
-
-
-
-// 숙제 1
-let user:string = 'kim';
-let age:undefined|number = undefined;
-let married:boolean = false;
-let friend:(string|number|undefined|boolean)[] = [user, age, married];
-
-// 숙제 2
-let 학교:{
-    score:(number|boolean)[], 
-    teacher:string, 
-    friend:string|string[]
-}={
-    score : [100,90,80],
-    teacher : 'Phil',
-    friend : 'John'
+// 함수 타입지정
+function 함수(x:number) :number{
+    return x*2
 }
-학교.score[4] = false;
-학교.friend = ['Lee', 학교.teacher]
+
+함수(2)
+
+
+// 함수 타입지정 - void
+function 함수2(x:number) :void{
+    // return x*2
+}
+함수2() //에러 - 파라미터를 안넣어주었기 때문
+
+
+// 함수 타입지정 - 파라미터 옵션 설정
+function 함수3(x?:number) :void{
+}
+함수3()
+
+
+// 퀴즈1
+function 함수4(x : number|string) :void{
+    if(x==='number')
+    console.log(x+1)
+}
+함수4(2)
 
 // 숙제 1
+function exam1(x?:string) :void{
+    if(x) console.log(`하이 +${x}`)
+    else console.log(`입력안함`)
+}
 
 
+//숙제 2
+function exam2(x: string|number) : number{
+    return x.toString().length  //숫자는 length를 붙일 수 있음
+}
+
+
+// 숙제 3
+function exam3(money: number, house:boolean, charm:string) :string|void{
+    let score :number = 0;
+
+    score += money;
+    if(house == true) score += 500
+    if(charm == '상') score+= 100
+
+    if(score >= 600) return("결혼가능")
+}
+console.log(exam3(1000,true,'상'));
