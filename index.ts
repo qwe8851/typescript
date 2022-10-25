@@ -1,69 +1,75 @@
-// 함수 methods에 type alias 지정하는 방법
+// ts로 html변경&조작 시 주의할 점
 
-//함수 표현식을 사용해서 함수타입 지정
-// 연습1
-type 함수타입 = (a:string) => number;
+let 제목 = document.querySelector('#title');
 
-let 함수:함수타입 = function(){
-    return 10;
+//Narrowing 방법 5가지
+// 1. 타입을 하나로 확정
+if(제목!=null) {
+    제목.innerHTML = '반가워요'
 }
 
-//연습 2
-type NumOut = (x:number, y:number) => number;
-let ABC:NumOut = function(x,y){return x+y}
-
-
-//methods 안에 타입 지정
-//숙제 1
-type Member = {
-    name: string,
-    age : number,
-    plusOne : (x:number) => number,
-    changeName : () => void
+// 2. instanceof 연산자
+if(제목 instanceof Element){
+    제목.innerHTML = '반가워요'
 }
-let 회원정보 : Member = {
-    name : 'kim',
-    age : 20,
-    plusOne(x){
-        return x +1
-    },
-    changeName : ()=>{
-        console.log('안녕');
+
+// 3. as assertion (추천 안 함)
+let 제목2 = document.querySelector('#title') as Element; // Element타입으로 확정됨(비상용)
+제목2.innerHTML = '반가워요'
+
+// 4. 오브젝트에 붙이는 ?.   (optional chaining)
+if(제목?.innerHTML){                // 1. 제목에 innerHTML이 있으면 출력해주고
+    제목.innerHTML = '반가워요'     // 2. 없으면 undefined를 뱉음 
+}
+
+// 5. tsconfig.json에서 strict 없애기... (추천 안 함)
+{
+    "compilerOptions" : {
+        "strictNullCheck" : false
     }
 }
-회원정보.plusOne(1)
-회원정보.changeName();
 
 
-//숙제 2
-type CutType = (x:string) => string;
 
-let cutZero:CutType = function(x){
-    let result = x.replace(/^0+/, "");
-    return result;
+
+
+// 링크 변경
+let 링크 = document.querySelector('.link');
+if(링크 instanceof HTMLAnchorElement){      // HTMLAnchorElement, HTMLHeadingElement, HTMLButtonElement 등 여러 element타입이 있음
+    링크.href = 'https://kakao.com';
 }
 
-function removeDash(x:string) : number{
-    let result = x.replace(/-/g, "");
-    return parseFloat(result);
+// 버튼 변경
+let 버튼 = document.querySelector('#button');
+// if(버튼 instanceof HTMLButtonElement){
+//     버튼.addEventListener('click',function(){
+//         console.log('하이');
+//     }
+// }
+버튼?.addEventListener('click', function(){
+    console.log('하이');
+})
+
+// 숙제 1
+let 이미지 = document.querySelector('#image');
+if(이미지 instanceof HTMLImageElement){
+    이미지.src = 'change.jpg';
 }
 
-// 숙제 3 - 어려움 ㅜ 보고풀었음
-// 타입없이 먼저 작성
-function func3(x, func1, func2){
-    let result = func1(x);    // string타입 x라는 파라미터를 func1함수에 삽입, 결과를 result에 저장
-    let result2 = func2(result);    // 윗줄의 결과를 func2에 삽입
-    console.log(result2);   // 최종 결과를 콘솔창에 출력
-}
-func3('010-0000-0000', cutZero, removeDash);
+// 숙제 2
+let 링크2 = document.querySelectorAll('.naver'); // querySelectorAll로 써야 다 선택됨. querySelector로 쓰면 맨 위 하나만 선택
 
-// 타입지정(최종코드)
-type type1 = (x:string) => string;  
-type type2 = (x:string) => number; // 데쉬를 없앳으니 문자만 남음
+// forEach 사용
+링크2.forEach((a)=>{
+    if (a instanceof HTMLAnchorElement){
+        a.href = 'https://kakao.com'
+    }
+})
 
-function func4(x:string, func1:type1, func2:type1){
-    let result = func1(x);
-    let result2 = func2(result);   
-    console.log(result2);   
+// 일반 반복문 사용
+for(let i=0; i<3; i++){
+    let a = 링크2[i];   // 일반 for반복문을 쓸 경우 변수를 만들어줘야 매끄럽게 narrowing이 가능함
+    if(a instanceof HTMLAnchorElement){
+        a.href = 'https://kakako.com';
+    }
 }
-func3('010-0000-0000', cutZero, removeDash);

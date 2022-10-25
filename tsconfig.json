@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "commonjs"
+        "module": "commonjs",
+        "strictNullChecks": true  //null을 엄격하게 체크하는 옵션
     }
 }

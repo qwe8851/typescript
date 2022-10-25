@@ -1,39 +1,61 @@
-// 함수 methods에 type alias 지정하는 방법
-var 함수 = function () {
-    return 10;
-};
-var ABC = function (x, y) { return x + y; };
-var 회원정보 = {
-    name: 'kim',
-    age: 20,
-    plusOne: function (x) {
-        return x + 1;
-    },
-    changeName: function () {
-        console.log('안녕');
+// ts로 html변경&조작 시 주의할 점
+var 제목 = document.querySelector('#title');
+//Narrowing 방법 5가지
+// 1. 타입을 하나로 확정
+if (제목 != null) {
+    제목.innerHTML = '반가워요';
+}
+// 2. instanceof 연산자
+if (제목 instanceof Element) {
+    제목.innerHTML = '반가워요';
+}
+// 3. as assertion (추천 안 함)
+var 제목2 = document.querySelector('#title'); // Element타입으로 확정됨(비상용)
+제목2.innerHTML = '반가워요';
+// 4. 오브젝트에 붙이는 ?.   (optional chaining)
+if (제목 === null || 제목 === void 0 ? void 0 : 제목.innerHTML) { // 1. 제목에 innerHTML이 있으면 출력해주고
+    제목.innerHTML = '반가워요'; // 2. 없으면 undefined를 뱉음 
+}
+// 5. tsconfig.json에서 strict 없애기... (추천 안 함)
+{
+    "compilerOptions";
+    {
+        "strictNullCheck";
+        false;
     }
-};
-회원정보.plusOne(1);
-회원정보.changeName();
-var cutZero = function (x) {
-    var result = x.replace(/^0+/, "");
-    return result;
-};
-function removeDash(x) {
-    var result = x.replace(/-/g, "");
-    return parseFloat(result);
 }
-// 숙제 3 - 어려움 ㅜ 보고풀었음
-// 타입없이 먼저 작성
-function func3(x, func1, func2) {
-    var result = func1(x); // string타입 x라는 파라미터를 func1함수에 삽입, 결과를 result에 저장
-    var result2 = func2(result); // 윗줄의 결과를 func2에 삽입
-    console.log(result2); // 최종 결과를 콘솔창에 출력
+// 링크 변경
+var 링크 = document.querySelector('.link');
+if (링크 instanceof HTMLAnchorElement) { // HTMLAnchorElement, HTMLHeadingElement, HTMLButtonElement 등 여러 element타입이 있음
+    링크.href = 'https://kakao.com';
 }
-func3('010-0000-0000', cutZero, removeDash);
-function func4(x, func1, func2) {
-    var result = func1(x);
-    var result2 = func2(result);
-    console.log(result2);
+// 버튼 변경
+var 버튼 = document.querySelector('#button');
+// if(버튼 instanceof HTMLButtonElement){
+//     버튼.addEventListener('click',function(){
+//         console.log('하이');
+//     }
+// }
+버튼 === null || 버튼 === void 0 ? void 0 : 버튼.addEventListener('click', function () {
+    console.log('하이');
+});
+// 숙제 1
+var 이미지 = document.querySelector('#image');
+if (이미지 instanceof HTMLImageElement) {
+    이미지.src = 'change.jpg';
 }
-func3('010-0000-0000', cutZero, removeDash);
+// 숙제 2
+var 링크2 = document.querySelectorAll('.naver'); // querySelectorAll로 써야 다 선택됨. querySelector로 쓰면 맨 위 하나만 선택
+// forEach 사용
+링크2.forEach(function (a) {
+    if (a instanceof HTMLAnchorElement) {
+        a.href = 'https://kakao.com';
+    }
+});
+// 일반 반복문 사용
+for (var i = 0; i < 3; i++) {
+    var a = 링크2[i]; // 일반 for반복문을 쓸 경우 변수를 만들어줘야 매끄럽게 narrowing이 가능함
+    if (a instanceof HTMLAnchorElement) {
+        a.href = 'https://kakako.com';
+    }
+}
