@@ -1,10 +1,26 @@
-// Narrowing 할 수 있는 방법 더 알아보기
+// never type
 
-// 1. &&연산자로 null & undefined 타입 체크하기
-function func(a: string | undefined) {
-  if (a && typeof a === "string") {
-    // case1. a가 undefined면 실행이 되지 않음.
-    // case2. a가 string이면 괄호 안에가 실행됨( turn가 남을 것임.)
+
+function func() :never{
+// 무언가 리턴하지 않을때 never type을 사용(void와 비슷하지만 더 엄격한 조건이 붙는다.)
+}
+
+
+// function return 값에 붙일 수 있는 never type
+// 조건1. return값이 없어야 함
+// 조건2. endpoint가 없어야 함
+
+
+// 끝나지 않는 함수? endpoint가 없는 함수 생성하는 2가지 방법
+// 1. error
+function func2(): never {
+  throw new Error();    //강제로 에러를 냄. 에러가 나면 코드 실행이 중단됨(함수가 끝나는거 X!)
+}
+
+
+function func3(): never{
+  while(true){    // 조건식에 ture를 강제로 기입. 끝나지 않는 함수이므로 never타입을 가질 수 있음
+
   }
 }
 
@@ -12,57 +28,28 @@ function func(a: string | undefined) {
 
 
 
-// 2. in키워드로 object narrowing 가능
-// - 형식 : 속성명 in 오브젝트자료
-// - 서로 가진 속성명이 다를때 쓰면 좋음(배타적인 속성)
-type Fish = { swim: string };
-type Bird = { fly: string };
+// void타입으로 대체할 수 있으므로 
+never타입은 코드를 이상하게 짜면 등장함
 
-function func2(animal: Fish | Bird) {
-  if ("swim" in animal) {
-    animal.swim;
-  }
+// nevertype이 등장하는 경우 
+// 1. 이상한 narrowing
+function func4(params:string) {
+  if(typeof params == 'string'){
+    console.log(params)
+  }else{    //fuction의 params를 받아올때 이미 타입검증을 함. (params가 string type일 때만 들어온다)
+    console.log(params);    // 여기서 params의 값이 never이 됨. 
+  }   //그래서 여기서 never은 있을 수 없다. 라는 뜻으로 쓰임. 
 }
 
-
-
-
-
-// 3. instanceof연산자로 object narrowing
-// - 형식 : 오브젝트 instanceof 부모class
-// - 오브젝트의 부모가 누구인지 검사해주는게 instanceof
-// - object 두 개가 비슷하면 부모 class가 누군지 물어봐서 narrowing 가능
-let 날짜 = new Date();
-
-if (날짜 instanceof Date) {
+// 2. 어떤 함수 표현식은 return 타입이 자동으로 never
+let 함수 = function () {
+  throw new Error();
 }
+// 강제로 error를 반환하는 함수임
+// 이런 경우 null도 undefined도 아무것도 남지 않음
+// 이럴때 뭔가 이상하다고 알려주기위해 never타입이 됨. 
 
-
-
-
-
-// 4. object 타입마다 literal type으로 narrowing하기
-// - 아래와 같은 경우 배타적인 속성이 아니므로 in키워드 불가
-// - 부모 class가 없으므로 instanceof도 불가
-// - 비슷한 object타입의 경우 literal type을 강제로 만들어두면 도움됨
-type Car = {
-  wheel: "4개";   // literal type
-  color: string;
-};
-type Bike = {
-  wheel: "2개";   // literal type
-  color: string;
-};
-
-function func3(x: Car | Bike) {
-  if(x.wheel === '4개'){
-    console.log('x는 Car 타입입니다~');
-  }
-}
-
-
-
-
+// 보통은 void타입을 씀
 
 // Summary
-// 논리적으로 이 타입인지 특정지을 수 있다면 type narrowing으로 인정해줌
+// never타입은 그럴일이 없는 뭔가 이상하다는걸 알려주는 사인이라고 생각하면 되고 평소에는 void타입을 쓰면 되겠다!
