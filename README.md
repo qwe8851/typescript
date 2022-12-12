@@ -21,4 +21,11 @@
 `npx create-react-app 프로젝트명 --template typescript`
 <br><br>
 2. 기존 프로젝트에 ts추가 설치<br>
-`npm install --save typescript @types/node @types/react @types/react-dom @types/jest`<br><br>
+`npm install --save typescript @types/node @types/react @types/react-dom @types/jest`
+
+<br><br><br><br><br>
+
+
+##  Redux toolkit 
+1. Redux toolkit 설치 <br>
+`npm install redux react-redux`

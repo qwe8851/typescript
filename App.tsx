@@ -1,27 +1,16 @@
-// React + TypeScript 사용할 때 알아야할 점
-// react 프로젝트라고 가정하고,, 
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, 증가 } from "./index";
+import { Dispatch } from "redux";
 
-
-import React from "react";
-import "./ App.css";
-
-let box: JSX.Element = <div></div>;
-
-function App() {
-
-    // state는 타입지정이 알아서 잘 됨. 할필요 X
-    let [user, setUser] = useState('kim');
-
-    return (  
-        <div>
-            <h4>안녕하세요</h4>
-            <Profile name = "철수" age="20"></Profile>
+function App(){
+    const 꺼내온거 = useSelector((state: RootState) => state);
+    const dispatch :Dispatch = useDispatch();
+    return(
+        <div className = "App">
+            {꺼내온거.counter1.count}       {/* counter1.count로 해줘야 내가 만들어둿던 count state가 보임*/}
+            {꺼내온거.counter1.user} 
+            <button onClick={()=>{ dispatch(증가())}}>버튼</button>
         </div>
-  );
-}
-
-function Profile(props : { name: string, age:number}): JSX.Element {
-  return (
-    <div>{props.name}입니다.</div>
-  )
+    );
 }
