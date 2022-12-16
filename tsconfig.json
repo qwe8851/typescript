@@ -3,5 +3,7 @@
         "target": "es5",
         "module": "commonjs",
         "strictNullChecks": true  //null을 엄격하게 체크하는 옵션
+        ,"declaration": true        // ts파일마다 d.ts파일 자동생성
+        ,"typeRoots": ["./types"]
     }
 }
