@@ -1,73 +1,99 @@
-// 🤔 implements 키워드
-
-// interace는 object타입지정할 떄 씀.
-// 하지만 용도가 하나 더 있는데 class타입을 확인하고 싶을 떄도 imterface문법을 사용할 수 있음.
-// 근데 implements키워드도 필요함
+// 🤔 object index signatures
 
 
+// ✨ index signature 쓰면 한번에 object type 지정이 가능
+interface StringOnly {
+    [key: string]: string; // [key:string] : 모든 문자로 된 속성
+
+    // age: string;     가능
+    // age2: 20;        가능
+    // age3: number;    불가
+}
+let user: StringOnly = {
+    name: "kim",
+    age: "20",
+    location: "seoul",
+};
+user.name;
+
+
+
+// 📎 object처럼 사용도 가능
+interface NumberOnly1{
+    [key: number]: string;  //  [key: string]: string;도 가능
+}
+
+let user2: NumberOnly1 = {
+    0: "kim",
+    1: "20",
+    2: "seoul"
+}
+user2[0];
 
 
 
 
-// ✨ implements 키워드
-class Car {
-    model: string;
-    price: number = 1000;
 
-    constructor(a: string) {
-        this.model = a;
+
+
+// ✨ 이런 object 자료 타입지정도 가능
+let css: MyType = {  //얘는 타입지정 잘 되어있어서 따로 해주지 않아도 되는데
+    'font-size':{
+        'font-size':{
+            'font-size': 14
+        }
     }
 }
 
-let 붕붕이 = new Car("morning");
-// class Car로부터 생산되는 object들은 model과 price속성을 가지게 됨
-// 근데 class가 module,price속성을 가지고 있는지 타입으로 확인하고싶을때
-// imterface + implements키워드로 확인하면 됨.
-
-
-
-interface CarType2{
-    model: string;
-    price: number;
-}
-
-class Car2 implements CarType2{
-    model: string;
-    price : number = 1000;
-
-    constructor(a:string){
-        this.model = a;
+interface MyType{   // 해주고 싶다면 뭐 똑같이 interface 만들면 됨
+    'font-size':{
+        'font-size':{
+            'font-size': 14
+        }
     }
 }
 
-let 붕붕이2  = new Car2('morning');
-// class이름 우측에 implements를 쓰고 imterface 이름을 쓰면
-// "이 class가 imterface에 있는 속성을 다 들고있냐"라고 확인이 가능해짐
-//  - 그래서 다 갖고 있으면 별 말 안해주고
-//  - 빠진 속성이 있으면 에러로 알려줌
-
-
-
-
-
-
-
-// ✨ implements는 타입지정문법이 아님
-// implements라는건 interface에 들어있는 속성을 가지고 있는지 확인만하라는 뜻임
-// class에다가 타입을 할당하고 변형시키는 키워드는 아님
-interface CarType3 {
-    model: string,
-    tax: (price: number) => number;
+// 📎 recursive하게 타입만드는 법
+interface recursiveType {       // 중첩해서 사용가능
+    'font-size': recursiveType | number;    // 마지막에 14를 받기위한 union number;
 }
 
-class Car3 implements CarType3 {
-    model;  // any 타입이 됨
-    tax(a) {    // a 파라미터는 any타입이 됨.
-        return a * 0.1;
-    }
-}
-// 지금은 CarType3를 implements했냐고 써봤음.
-// 근데 CarType에 있던 model: string이런게 반영되는건 아님. class안에서의 model은 any타입임.
-// class 함수도 마찬가지로 함수에 있던 number타입이 전혀 반영되지 않았음.
 
-// 💡 결론은 implements는 class타입을 체크하는 용도지 할당하는게 아님을 명시! 해야 함
+
+
+// *************************************************
+// 📝 숙제1. 다음 자료의 타입지정을 해보시오.
+let hw1 :indexSignatureType = {
+    model: "k5",
+    brand: "kia",
+    price: 6000,
+    year: 2030,
+    date: "6월",
+    percent: "5%",
+    dealer: "김차장",
+};
+interface indexSignatureType { 
+    [key: string] : string|number;
+}
+// 유연한 타입지정이 가능하지만 엄격하지 않아서 버그를 잡아준다는 장점이 없어질 수 있음
+
+
+
+// 📝 숙제2. 다음 object 자료의 타입을 interface를 써서 만들어보시오
+let hw2 :recursiveType2 = {
+    "font-size": 10,
+    secondary: {
+        "font-size": 12,
+        third: {
+            "font-size": 14,
+        },
+    },
+};
+
+interface recursiveType2 {
+    [key:string]: recursiveType2 | number;
+
+    // 이렇게 쓰면 더 엄격하게 사용 가능
+    // 'font-size' : number,
+    // [key:string] : number|recursiveType2;
+}
