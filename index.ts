@@ -1,99 +1,74 @@
-// 🤔 object index signatures
+// 🤔 object 타입 변환기 만들기
+
+// ✨ keyof 키워드
+let obj = { name: "kim", age: 20 };
+Object.keys(obj);       // ['name', 'age'] : obj안의 key값들을 모두 array자료안에 담아서 출력해줌
 
 
-// ✨ index signature 쓰면 한번에 object type 지정이 가능
-interface StringOnly {
-    [key: string]: string; // [key:string] : 모든 문자로 된 속성
-
-    // age: string;     가능
-    // age2: 20;        가능
-    // age3: number;    불가
-}
-let user: StringOnly = {
-    name: "kim",
-    age: "20",
-    location: "seoul",
-};
-user.name;
-
-
-
-// 📎 object처럼 사용도 가능
-interface NumberOnly1{
-    [key: number]: string;  //  [key: string]: string;도 가능
+interface Person{
+    age : number, 
+    name : string
 }
 
-let user2: NumberOnly1 = {
-    0: "kim",
-    1: "20",
-    2: "seoul"
+type PersonKeys = keyof Person; // number|string : union타입으로 만들어줌
+let a : PersonKeys = 'name';
+
+// index signature에다가 keyof를 쓰면
+interface PsersonSignature{
+    [key :string]: number;
 }
-user2[0];
+type PsersonSignatureKeys = keyof PsersonSignature;
+let b :PsersonSignatureKeys = 'name';
 
 
 
 
 
 
-
-// ✨ 이런 object 자료 타입지정도 가능
-let css: MyType = {  //얘는 타입지정 잘 되어있어서 따로 해주지 않아도 되는데
-    'font-size':{
-        'font-size':{
-            'font-size': 14
-        }
-    }
-}
-
-interface MyType{   // 해주고 싶다면 뭐 똑같이 interface 만들면 됨
-    'font-size':{
-        'font-size':{
-            'font-size': 14
-        }
-    }
+// ✨ 타입변환기 (mapping)
+type Car = {
+    color : boolean;
+    model : boolean;
+    price: boolean | number;
 }
 
-// 📎 recursive하게 타입만드는 법
-interface recursiveType {       // 중첩해서 사용가능
-    'font-size': recursiveType | number;    // 마지막에 14를 받기위한 union number;
+type TypeChanger<MyType> ={ //1. MyType에 Car타입이 들어옴
+    [key in keyof MyType] : string;
 }
+// 2. keyof MyType : MyType의 key값들을 모두 뽑아 union type으로 생성
+//    'color', 'mdoel', 'price'
+// 3. key in~ : 왼쪽의 key값이 오른쪽에 있는 union type에 있으면
+// 4. :string; : string type으로 지정
+
+type 새로운타입 = TypeChanger<Car>;
 
 
 
 
-// *************************************************
-// 📝 숙제1. 다음 자료의 타입지정을 해보시오.
-let hw1 :indexSignatureType = {
-    model: "k5",
-    brand: "kia",
-    price: 6000,
-    year: 2030,
-    date: "6월",
-    percent: "5%",
-    dealer: "김차장",
-};
-interface indexSignatureType { 
-    [key: string] : string|number;
+
+
+
+// 📝 숙제1. 아래 타입을 타입 변환기 돌리기
+// color, model, price 속성은 전부 string 또는 number 타입이어야 한다.
+type Bus = {
+    color : string;
+    model : boolean;
+    price: number;
 }
-// 유연한 타입지정이 가능하지만 엄격하지 않아서 버그를 잡아준다는 장점이 없어질 수 있음
-
-
-
-// 📝 숙제2. 다음 object 자료의 타입을 interface를 써서 만들어보시오
-let hw2 :recursiveType2 = {
-    "font-size": 10,
-    secondary: {
-        "font-size": 12,
-        third: {
-            "font-size": 14,
-        },
-    },
-};
-
-interface recursiveType2 {
-    [key:string]: recursiveType2 | number;
-
-    // 이렇게 쓰면 더 엄격하게 사용 가능
-    // 'font-size' : number,
-    // [key:string] : number|recursiveType2;
+type BusChanger<MyType> = {
+    [key in keyof MyType] : string|number;
 }
+type NewBus = BusChanger<Bus>;
+
+
+
+// 📝 숙제2. obj안의 모든 속성을 string, number처럼 고정된 타입으로 변환하는것이 아니라
+// 내가 원하는 타입을 입력하면 그걸로 변환해주는 범용성 좋은 변환기 만들기
+// 📎위에 버스타입 씀
+type BusChanger2 <MyType, T> = {
+    [key in keyof MyType]:T;
+}
+type numbBus2 = BusChanger2<Bus, boolean>;
+type numbBus3 = BusChanger2<Bus, string[]>;
+// 이렇게 쓰면 BusChanger2를 쓸 떄마다 타입파라미터를 T자리에 하나 더 입력할 수 있게 됨.
+// 그러면 이제 오브젝트 모든 속성은 T로 변경됨
