@@ -1,46 +1,19 @@
-// 🤔 object 타입 변환기 만들기
+// 🤔 조건문으로 타입만들기 & infer
 
-// ✨ keyof 키워드
-let obj = { name: "kim", age: 20 };
-Object.keys(obj);       // ['name', 'age'] : obj안의 key값들을 모두 array자료안에 담아서 출력해줌
-
-
-interface Person{
-    age : number, 
-    name : string
-}
-
-type PersonKeys = keyof Person; // number|string : union타입으로 만들어줌
-let a : PersonKeys = 'name';
-
-// index signature에다가 keyof를 쓰면
-interface PsersonSignature{
-    [key :string]: number;
-}
-type PsersonSignatureKeys = keyof PsersonSignature;
-let b :PsersonSignatureKeys = 'name';
+// ✨ 조건문 써서 타입생성하기
+type Age<T> = T extends string? string : unknown;
+let a :Age<string>  // string
+let b :Age<number>  // unknown
+// 삼항연산자를 통해 타입을 지정해주는데, 조건식은 extends문법으로 사용해야 함
 
 
 
+// 퀴즈1. 파라미터로 array자료를 입력하면 array의첫 자료의 타입을 그대로 남겨주고,
+// array자료가 아니라면 any타입을 남겨주는 타입 생성하기
+type FirstItem<T> = T extends any[] ? T[0] : any;
 
-
-
-// ✨ 타입변환기 (mapping)
-type Car = {
-    color : boolean;
-    model : boolean;
-    price: boolean | number;
-}
-
-type TypeChanger<MyType> ={ //1. MyType에 Car타입이 들어옴
-    [key in keyof MyType] : string;
-}
-// 2. keyof MyType : MyType의 key값들을 모두 뽑아 union type으로 생성
-//    'color', 'mdoel', 'price'
-// 3. key in~ : 왼쪽의 key값이 오른쪽에 있는 union type에 있으면
-// 4. :string; : string type으로 지정
-
-type 새로운타입 = TypeChanger<Car>;
+let age1: FirstItem<string[]>;
+let age2: FirstItem<number>; 
 
 
 
@@ -48,27 +21,57 @@ type 새로운타입 = TypeChanger<Car>;
 
 
 
-// 📝 숙제1. 아래 타입을 타입 변환기 돌리기
-// color, model, price 속성은 전부 string 또는 number 타입이어야 한다.
-type Bus = {
-    color : string;
-    model : boolean;
-    price: number;
-}
-type BusChanger<MyType> = {
-    [key in keyof MyType] : string|number;
-}
-type NewBus = BusChanger<Bus>;
+// ✨ infer 키워드
+// infer 키워드 예시 1.
+// 왼쪽에 있는 타입을(T) 추출해서 R에 담아줌
+type Person<T> = T extends infer R ? R : unknown;      // R : String
+type c = Person<string>;
+
+// infer 키워드 예시 2. array내부의 타입만 뽑고 싶을 떄 
+type 타입추출<T> = T extends (infer R)[] ? R : unknown; // infer R : string
+type d = 타입추출<string[]>;
+
+// infer 키워드 예시 3. 함수를 넣으면 함수의 return 타입만 뽑고 싶을 떄 
+type 타입추출2<T> = T extends ( ()=> infer R )? R : unknown;    // R : void
+type e = 타입추출< ()=> void >;
 
 
 
-// 📝 숙제2. obj안의 모든 속성을 string, number처럼 고정된 타입으로 변환하는것이 아니라
-// 내가 원하는 타입을 입력하면 그걸로 변환해주는 범용성 좋은 변환기 만들기
-// 📎위에 버스타입 씀
-type BusChanger2 <MyType, T> = {
-    [key in keyof MyType]:T;
-}
-type numbBus2 = BusChanger2<Bus, boolean>;
-type numbBus3 = BusChanger2<Bus, string[]>;
-// 이렇게 쓰면 BusChanger2를 쓸 떄마다 타입파라미터를 T자리에 하나 더 입력할 수 있게 됨.
-// 그러면 이제 오브젝트 모든 속성은 T로 변경됨
+
+// 함수를 넣으면 함수의 return 타입만 뽑아 쓰고 싶을때는
+// => ReturnType이라는 기본 함수를 쓰면 알아서 해줌
+type f = ReturnType<() => void>
+
+
+
+
+
+
+
+
+
+
+// 📝 숙제1. 타입파라미터로
+// 1. array 타입을 입력하면
+// 2. array의 첫 자료가 string이면 string 타입을 그대로 남겨주고 
+// 3. array의 첫 자료가 string이 아니면 unknown 을 남겨주려면 어떻게 타입을 만들어놔야할까요?
+let age3 : Age<[string, number]>;
+let age4 : Age<[boolean, number]>;
+// (동작예시) 이러면 age3타입을 string, age4타입은 unknown이 되어야함(array나 tuple이나 그게 그거임)
+// 이걸 만족ㅎ는 type Age 생성하기 
+
+type Age3<T> = T extends [string, ...any] ? T[0] : unknown;
+// 이렇게 해주면 age3은 string, age4는 unknown이 됨.
+
+
+
+
+
+// 📝 숙제2. 함수의 파라미터의 타입을 뽑아주는 기계 만들기
+타입뽑기<(x: number) => voide>;
+타입뽑기<(x: string) => voide>;
+
+type 타입뽑기<T> = T extends (x :infer R) => any ? R:any;
+// 이렇게하면 a라는 타입이 number로 잘 남음
+// 참고로 함수만 들어올 수 있게 제한을 두고 싶으면 
+// 언제나 T라는 함수 파라미터 만들 떄 extends로 제한을 두면 됨
